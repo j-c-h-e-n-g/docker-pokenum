@@ -1,20 +1,16 @@
-FROM ubuntu:12.04
+FROM ubuntu:14.04
 MAINTAINER John Cheng "github@johncheng.com"
 
-RUN apt-get update 
-RUN apt-get -y install curl build-essential libxml2-dev libxslt-dev git php5-dev php5-cli git
-RUN apt-get -y install libpoker-eval libpoker-eval-dev 
+RUN \
+  sed -i 's/# \(.*multiverse$\)/\1/g' /etc/apt/sources.list && \
+  apt-get update && \
+#  apt-get -y upgrade && \
+  apt-get install -y build-essential software-properties-common byobu curl git htop man unzip vim wget libpoker-eval libpoker-eval-dev php5-dev php5-cli && \
+  rm -rf /var/lib/apt/lists/*
 
-RUN cd /tmp; git clone https://github.com/j-c-h-e-n-g/pokenum-php.git && cd /tmp/pokenum-php && /usr/bin/phpize && ./configure --enable-pokenum && make && make install
-
-ADD php.ini /etc/php5/cli/php.ini
-ADD test.php /tmp/test.php
-
-RUN apt-get install -y openssh-server
-RUN mkdir /var/run/sshd
-RUN echo 'root:changeme' |chpasswd
-
-EXPOSE 22
-CMD /usr/sbin/sshd -D
-
-  
+RUN cd /tmp; git clone https://github.com/steevel/pokenum-php; 
+RUN cd /tmp/pokenum-php; /usr/bin/phpize
+RUN cd /tmp/pokenum-php; ./configure --enable-pokenum
+RUN cd /tmp/pokenum-php; make
+RUN cd /tmp/pokenum-php; make install 
+RUN sed -i.bak 's/enable_dl = Off/enable_dl = On/g' /etc/php5/cli/php.ini
