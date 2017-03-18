@@ -2,7 +2,7 @@
 
 build it and run it like this: 
 
-`docker run -it 99393442b0c4 php -r ' dl("pokenum.so"); print_r(pokenum(PN_TEXAS, array("Ah Ac", "Kd Kc")));'`
+`docker run -it jcheng/pokenum php -r ' dl("pokenum.so"); print_r(pokenum(PN_TEXAS, array("Ah Ac", "Kd Kc")));'`
 
 ... and appreciate the wonderful world of docker. No more chef cookbook.
 ```
